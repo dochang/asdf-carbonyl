@@ -1,8 +1,5 @@
-#!/usr/bin/env bash
-
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for carbonyl.
 GH_REPO="https://github.com/fathyb/carbonyl"
 TOOL_NAME="carbonyl"
 TOOL_TEST="carbonyl --version"
@@ -31,18 +28,49 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if carbonyl has other means of determining installable versions.
 	list_github_tags
 }
 
+get_platform() {
+	local platform=""
+
+	platform="$(uname | tr '[:upper:]' '[:lower:]')"
+	case "$platform" in
+	darwin) platform="macos" ;;
+	esac
+
+	echo -n "$platform"
+}
+
+get_arch() {
+	local arch=""
+
+	case "$(uname -m)" in
+	x86_64 | amd64) arch="amd64" ;;
+	i686 | i386) arch="386" ;;
+	armv6l) arch="armv6" ;;
+	armv7l) arch="armv7" ;;
+	aarch64 | arm64) arch="arm64" ;;
+	ppc64le) arch="ppc64le" ;;
+	riscv64) arch="riscv64" ;;
+	s390x) arch="s390x" ;;
+	*)
+		echo "Arch '$(uname -m)' not supported!" >&2
+		exit 1
+		;;
+	esac
+
+	echo -n $arch
+}
+
 download_release() {
-	local version filename url
+	local version filename platform arch url
 	version="$1"
 	filename="$2"
+	platform="$(get_platform)"
+	arch="$(get_arch)"
 
-	# TODO: Adapt the release URL convention for carbonyl
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/v${version}/carbonyl.${platform}-${arch}.zip"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,7 +79,7 @@ download_release() {
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="${3%/bin}"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
@@ -61,7 +89,6 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert carbonyl executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
