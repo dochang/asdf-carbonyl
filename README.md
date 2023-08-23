@@ -1,7 +1,11 @@
 <!-- markdownlint-disable MD041 -->
 <div align="center">
 
-# asdf-carbonyl [![Build](https://github.com/dochang/asdf-carbonyl/actions/workflows/build.yml/badge.svg)](https://github.com/dochang/asdf-carbonyl/actions/workflows/build.yml) [![Lint](https://github.com/dochang/asdf-carbonyl/actions/workflows/lint.yml/badge.svg)](https://github.com/dochang/asdf-carbonyl/actions/workflows/lint.yml)
+# asdf-carbonyl
+
+[![Build](https://github.com/dochang/asdf-carbonyl/actions/workflows/build.yml/badge.svg)](https://github.com/dochang/asdf-carbonyl/actions/workflows/build.yml)
+[![Lint](https://github.com/dochang/asdf-carbonyl/actions/workflows/lint.yml/badge.svg)](https://github.com/dochang/asdf-carbonyl/actions/workflows/lint.yml)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/dochang/asdf-carbonyl/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/dochang/asdf-carbonyl/tree/main)
 
 
 [carbonyl](https://fathy.fr/carbonyl) plugin for the [asdf version manager](https://asdf-vm.com).
